@@ -1,0 +1,52 @@
+#   ____  ____   _____               
+#  / __ \|  _ \ / ____|              
+# | |  | | |_) | |     ___  _ __ ___ 
+# | |  | |  _ <| |    / _ \| '__/ _ \
+# | |__| | |_) | |___| (_) | | |  __/
+#  \___\_\____/ \_____\___/|_|  \___|
+
+## You CAN edit the following:
+endpoint_add_tcp "0.0.0.0:30120"
+endpoint_add_udp "0.0.0.0:30120"
+sv_maxclients 48
+set steam_webApiKey "none"
+sets tags "default, deployer, qbcore, qb-core"
+
+## You MAY edit the following:
+sv_licenseKey "cfxk_RHtlfa330LPk3zprubkO_Rut5n"
+sv_hostname "Business Economy built with Business Economy by The QBCore Family, forked by Bankfraud1!"
+sets sv_projectName "[Business Economy] Business Economy"
+sets sv_projectDesc "An advanced RedM framework including jobs, gangs, housing & more!"
+sets locale "en-US" 
+load_server_icon myLogo.png
+set mysql_connection_string "mysql://root@localhost/redemrp?charset=utf8mb4"
+set gamename rdr3
+set sv_enforceGameBuild 1436
+
+# These resources will start by default.
+ensure mapmanager
+ensure chat
+ensure spawnmanager
+ensure sessionmanager-rdr3
+ensure basic-gamemode
+ensure hardcap
+
+# QBCore & Extra stuff
+ensure oxmysql
+ensure qbr-core
+ensure [standalone]
+ensure [qbr]
+
+## Permissions ##
+
+# Resources
+add_ace resource.qbr-core command allow # Allow qb-core to execute commands
+
+# Gods
+add_ace qbcore.god command allow # Allow all commands
+add_ace qbcore.god whitelisted allow # Allow access to server when closed
+
+# Inheritance
+add_principal qbcore.admin qbcore.mod # Allow admins access to mod commands
+#add_principal identifier.{{principalMasterIdentifier}} qbcore.god <- doesn't exist yet, change the generated one below to qbcore.god
+add_principal identifier.fivem:9092689 group.admin #bankfraud1
