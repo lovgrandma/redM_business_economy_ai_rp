@@ -8,7 +8,3 @@ Config.blips = {
         coords = { x = 856.8, y = 215.83, z = 125.01 }
     }
 }
-
-Config.aipool = {
-    maxai = 20
-}

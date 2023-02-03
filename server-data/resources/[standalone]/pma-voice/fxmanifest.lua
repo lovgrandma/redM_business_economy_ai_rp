@@ -56,7 +56,7 @@ convar_category 'PMA-Voice' {
 	{ "Voice call volume", "$voice_defaultCallVolume", "CV_INT", "60" },
 	{ "Enable radios", "$voice_enableRadios", "CV_INT", "1" },
 	{ "Enable calls", "$voice_enableCalls", "CV_INT", "1" },
-	{ "Enable submix", "$voice_enableSubmix", "CV_INT", "1" },
+	{ "Enable submix", "$voice_enableSubmix", "CV_INT", "0" },
         { "Enable radio animation", "$voice_enableRadioAnim", "CV_INT", "0" },
 	{ "Radio key", "$voice_defaultRadio", "CV_STRING", "LMENU" },
 	{ "UI refresh rate", "$voice_uiRefreshRate", "CV_INT", "200" },

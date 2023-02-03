@@ -7,11 +7,14 @@ shared_scripts {
 }
 
 client_scripts {
+    'client/animals.lua',
     'client.lua',
+    'client/mainpassiveai.lua'
 }
 
 server_scripts {
-    'server/randomaiinterval.lua'
+    'server/randomaiinterval.lua',
+    'server/animals.lua'
 }
 
 server_exports {

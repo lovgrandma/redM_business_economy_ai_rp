@@ -30,10 +30,10 @@ QB.Spawns = {
     },
     ["default"] = {
         coords = {
-            x = 2556.46,
-            y = -1159.73,
-            z = 53.7,
-            h = 137.05
+            x = 2807.98,
+            y = -1163.32,
+            z = 48.15,
+            h = 11.55
         },
         location = "default",
         label = "Default Spawn"

@@ -1,7 +1,13 @@
 local lastLTReleased = 0
 local lastRBReleased = 0
+local lastLeftPressed = 0
 local lastToggle = 0
 local lastSetDisplay = 0
+local inInventory = false
+
+RegisterNetEvent("inventory:client:RegisterInventoryFlag", function(val)
+	inInventory = val
+end)
 
 
 Citizen.CreateThread(function()
@@ -30,13 +36,21 @@ Citizen.CreateThread(function()
 		elseif lastRBReleased > 0 and lastRBReleased <= 25 then
 			lastRBReleased = lastRBReleased + 1
 		end
+		if lastLeftPressed > 25 then
+			lastLeftPressed = 0
+		elseif lastLeftPressed > 0 and lastLeftPressed <= 25 then
+			lastLeftPressed = lastLeftPressed + 1
+		end
 		if lastToggle > 0 then
 			lastToggle = lastToggle - 1
+		end
+		if IsControlPressed(0, 0xA65EBAB4) then -- DPAD LEFT
+			lastLeftPressed = 1
 		end
 		if IsControlPressed(0, 0xDEB34313) then -- DPAD RIGHT
 			lastLTReleased = 1
 		end
-		if IsControlPressed(0, 0x8FFC75D6) then -- SPRINT
+		if IsControlPressed(0, 0xD9D0E1C0) then -- JUMP
 			lastRBReleased = 1
 		end
 		if lastSetDisplay > 0 then
@@ -379,16 +393,19 @@ Citizen.CreateThread(function()
 			end
 			WarMenu.Display()
 			
-		elseif lastLTReleased > 0 and lastRBReleased > 0 and lastToggle == 0 then -- RB released
+		elseif lastLTReleased > 0 and lastRBReleased > 0 and lastToggle == 0 and inInventory == false and lastLeftPressed == 0 then -- RB released
 			lastToggle = 50
 			lastLTReleased = 0
 			lastRBReleased = 0
 			lastSetDisplay = 1
 			print("Toggle Anim Menu")
+			
 			WarMenu.OpenMenu('emotes')
 		end
 
-		if IsControlJustPressed(0, 0xA65EBAB4) then -- DPAD LEFT
+		-- handsup
+		local selectPressed = IsControlJustPressed(0, 0xC7B5340A)
+		if lastRBReleased == 0 and lastLTReleased > 0 and selectPressed and inInventory == false and lastLeftPressed == 0 then -- DPAD RIGHT and X
 			local playerPed = PlayerPedId()
 			if not IsEntityDead(playerPed) and not Citizen.InvokeNative(0x9682F850056C9ADE, playerPed) then
 				if WarMenu.IsAnyMenuOpened() == false then

@@ -39,6 +39,8 @@ local horseName
 local horseComponents = {}
 local initializing = false
 local alreadySentShopData = false
+local inInventory = false
+local inEmoteMenu = false
 
 myHorses = {}
 SaddlesUsing = nil
@@ -124,20 +126,20 @@ local function OpenStable()
         createCamera(PlayerPedId())
     end
     --  SetEntityVisible(PlayerPedId(), false)
-    if not alreadySentShopData then
-        SendNUIMessage(
-            {
-                action = "show",
-                shopData = getShopData()
-            }
-        )
-    else
-        SendNUIMessage(
-            {
-                action = "show"
-            }
-        )
-    end
+    -- if not alreadySentShopData then
+	SendNUIMessage(
+		{
+			action = "show",
+			shopData = getShopData() -- Always get shop data, sometimes it fails if you dont
+		}
+	)
+    -- else
+    --     SendNUIMessage(
+    --         {
+    --             action = "show"
+    --         }
+    --     )
+    -- end
     TriggerServerEvent("qbr-stable:AskForMyHorses")
 end
 
@@ -332,6 +334,10 @@ local function WhistleHorse()
             local pcoords = GetEntityCoords(PlayerPedId())
             local hcoords = GetEntityCoords(SpawnplayerHorse)
             local caldist = #(pcoords - hcoords)
+			EnsureEntityStateBag(SpawnplayerHorse)
+			Entity(SpawnplayerHorse).state.safeCompanion = true
+			Entity(SpawnplayerHorse).state.safeAi = true
+			print(SpawnplayerHorse)
             if caldist >= 100 then
                 DeleteEntity(SpawnplayerHorse)
                 Wait(1000)
@@ -786,10 +792,18 @@ CreateThread(function()
 	end
 end)
 
+RegisterNetEvent("inventory:client:RegisterInventoryFlag", function(val)
+	inInventory = val
+end)
+
+RegisterNetEvent("emote:client:RegisterEmoteOpenFlag", function(val)
+	inEmoteMenu = val
+end)
+
 CreateThread(function()
     while true do
         Wait(1)
-        if Citizen.InvokeNative(0x91AEF906BCA88877, 0, 0x24978A28) then -- Control =  H
+        if Citizen.InvokeNative(0x91AEF906BCA88877, 0, 0x24978A28) and inInventory == false and inEmoteMenu == false then -- Control =  H
 			WhistleHorse()
 			Wait(10000) --Flood Protection? i think yes zoot
         end

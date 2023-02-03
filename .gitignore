@@ -1,1 +1,4 @@
 citizen/system_resources/
+crashes/*
+server-data/cache/*
+server-data/cache/files/*

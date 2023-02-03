@@ -170,7 +170,7 @@ CreateThread(function()
                     if isBleeding > 0 then
                         if fadeOutTimer + 1 == Config.FadeOutTimer then
                             if blackoutTimer + 1 == Config.BlackoutTimer then
-                                SetFlash(0, 0, 100, 7000, 100)
+                                -- SetFlash(0, 0, 100, 7000, 100)
 
                                 DoScreenFadeOut(500)
                                 while not IsScreenFadedOut() do

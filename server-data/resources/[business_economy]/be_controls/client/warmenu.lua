@@ -20,6 +20,19 @@ local buttonScale = 0.365
 local buttonTextXOffset = 0.005
 local buttonTextYOffset = 0.005
 
+local lastOpen = 0
+
+Citizen.CreateThread(function()
+	Citizen.Wait(0)
+	local lastOpenThreshold = 200
+	if lastOpen > 0 and lastOpen < lastOpenThreshold then
+		lastOpen = lastOpen + 1
+	elseif lastOpen >= lastOpenThreshold then
+		lastOpen = 0
+	end
+end)
+
+
 
 local function debugPrint(text)
 	if WarMenu.debug then
@@ -267,6 +280,8 @@ function WarMenu.OpenMenu(id)
 		PlaySoundFrontend(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", true)
 		setMenuVisible(id, true)
 		debugPrint(tostring(id)..' menu opened')
+		lastOpen = 1
+		TriggerEvent("emote:client:RegisterEmoteOpenFlag", true)
 	else
 		debugPrint('Failed to open '..tostring(id)..' menu: it doesn\'t exist')
 	end
@@ -436,12 +451,16 @@ function WarMenu.Display()
 			elseif IsDisabledControlJustReleased(1, keys.right) then
 				currentKey = keys.right
 			elseif IsDisabledControlJustReleased(1, keys.select) then
-				currentKey = keys.select
+				if lastOpen > 0 then
+					currentKey = keys.select
+				end
 			elseif IsDisabledControlJustReleased(1, keys.back) then
 				if menus[menus[currentMenu].previousMenu] then
 					PlaySoundFrontend(-1, "BACK", "HUD_FRONTEND_DEFAULT_SOUNDSET", true)
 					setMenuVisible(menus[currentMenu].previousMenu, true)
 				else
+					lastOpen = 0
+					TriggerEvent("emote:client:RegisterEmoteOpenFlag", false)
 					WarMenu.CloseMenu()
 				end
 			end

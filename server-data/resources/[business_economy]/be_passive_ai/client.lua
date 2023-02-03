@@ -1,3 +1,5 @@
+
+-- Below is example code for creating blip
 local blips_table = {}
 
 Citizen.CreateThread(function()
@@ -21,3 +23,4 @@ AddEventHandler("onResourceStop", function(resourceName)
         end
     end
 end)
+-- End example code

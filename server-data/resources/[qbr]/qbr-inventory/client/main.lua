@@ -316,6 +316,7 @@ RegisterNetEvent('inventory:client:OpenInventory', function(PlayerAmmo, inventor
             maxammo = Config.MaximumAmmoValues,
         })
         inInventory = true
+        TriggerEvent("inventory:client:RegisterInventoryFlag", true)
     end
 end)
 
@@ -609,8 +610,11 @@ CreateThread(function()
     while true do
         Wait(0)
         local usingKeyboard = Citizen.InvokeNative(0xA571D46727E2B718, 0)
-        if IsControlJustReleased(0, 0xC1989F95) and IsInputDisabled(0) and usingKeyboard then -- key open inventory I
-            if not isCrafting then
+        local btnHoldPressed = IsDisabledControlPressed(0, 0xA65EBAB4)
+        if (IsControlJustReleased(0, 0xC1989F95) and IsInputDisabled(0) and usingKeyboard) or (btnHoldPressed and IsDisabledControlJustPressed(0, 0xC7B5340A)) then -- key open inventory I
+            if inInventory == true then
+                closeInventory()
+            elseif not isCrafting then
 				if not PlayerData.metadata["isdead"] and not PlayerData.metadata["inlaststand"] and not PlayerData.metadata["ishandcuffed"] and not IsPauseMenuActive() then
 					local ped = PlayerPedId()
 					local curVeh = nil
@@ -821,6 +825,10 @@ RegisterNUICallback('getCombineItem', function(data, cb)
 end)
 
 RegisterNUICallback("CloseInventory", function()
+    TriggerCloseInventory()
+end)
+
+function TriggerCloseInventory()
     if currentOtherInventory == "none-inv" then
         CurrentDrop = nil
         CurrentVehicle = nil
@@ -828,6 +836,7 @@ RegisterNUICallback("CloseInventory", function()
         CurrentStash = nil
         SetNuiFocus(false, false)
         inInventory = false
+        TriggerEvent("inventory:client:RegisterInventoryFlag", false)
         ClearPedTasks(PlayerPedId())
         return
     end
@@ -847,7 +856,8 @@ RegisterNUICallback("CloseInventory", function()
     end
     SetNuiFocus(false, false)
     inInventory = false
-end)
+    TriggerEvent("inventory:client:RegisterInventoryFlag", false)
+end
 
 RegisterNUICallback("UseItem", function(data)
     TriggerServerEvent("inventory:server:UseItem", data.inventory, data.item)
